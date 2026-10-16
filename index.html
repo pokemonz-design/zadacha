@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Одно поручение — два результата</title>
+<style>
+.fd-task-demo{--blue:#17549a;--dark:#163958;--pale:#eef6ff;--line:#d9e8f5;--text:#23364a;font-family:Arial,Helvetica,sans-serif;color:var(--text);max-width:850px;margin:20px auto;padding:22px;border-radius:18px;background:#f3f8ff;box-sizing:border-box}
+.fd-task-demo *{box-sizing:border-box}.fd-task-demo h3{margin:0 0 9px;color:var(--dark);font-size:23px;line-height:1.25}.fd-task-demo .intro{margin:0 0 18px;line-height:1.5;font-size:15px}.fd-task-demo .controls{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}.fd-task-demo button{cursor:pointer;border:1px solid #bdd3e7;color:var(--blue);background:white;padding:11px 15px;border-radius:10px;font:700 14px Arial,Helvetica,sans-serif;transition:background .2s,color .2s,transform .2s}.fd-task-demo button:focus-visible{outline:3px solid #ffaf48;outline-offset:3px}.fd-task-demo button.active{background:var(--blue);color:white;border-color:var(--blue)}.fd-task-demo button:hover{transform:translateY(-1px)}.fd-task-demo .panel{background:white;border:1px solid var(--line);border-radius:14px;padding:20px;animation:fdReveal .22s ease-out}.fd-task-demo .eyebrow{font-size:12px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--blue);margin-bottom:9px}.fd-task-demo blockquote{margin:0 0 19px;font-size:19px;line-height:1.55;font-weight:700;color:var(--dark);border-left:4px solid #e29b47;padding-left:15px}.fd-task-demo .good blockquote{border-color:#2f8b79}.fd-task-demo .result{border-radius:11px;background:#f0f5fa;padding:15px 17px;line-height:1.55}.fd-task-demo .result strong{display:block;color:var(--dark);margin-bottom:6px}.fd-task-demo .takeaway{margin-top:15px;border-top:1px solid var(--line);padding-top:12px;font-size:14px;line-height:1.5}.fd-task-demo .bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:15px}.fd-task-demo .step{font-size:12px;color:#61768b}.fd-task-demo .next{background:var(--blue);color:white}.fd-task-demo .next:hover{background:#123e75}@keyframes fdReveal{from{opacity:.4;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}@media(max-width:520px){.fd-task-demo{padding:15px;border-radius:12px}.fd-task-demo h3{font-size:20px}.fd-task-demo blockquote{font-size:17px}.fd-task-demo .controls button{flex:1;padding:10px}.fd-task-demo .panel{padding:16px}.fd-task-demo .bottom{flex-wrap:wrap}.fd-task-demo .next{width:100%}}@media(prefers-reduced-motion:reduce){.fd-task-demo .panel{animation:none}.fd-task-demo button{transition:none}}
+</style>
+</head>
+<body>
+<section class="fd-task-demo" id="fdTaskDemo" aria-label="Сравнение двух поручений">
+<h3>Одно поручение — два результата</h3>
+<p class="intro">Переключите формулировку и посмотрите, с чем сотрудник придет к финансовому директору.</p>
+<div class="controls" role="group" aria-label="Вариант поручения">
+<button type="button" data-variant="bad" class="active" aria-pressed="true">Как обычно</button>
+<button type="button" data-variant="good" aria-pressed="false">Как лучше</button>
+</div>
+<div class="panel bad" id="fdTaskPanel" aria-live="polite">
+<div class="eyebrow" id="fdTaskLabel">Поручение без ожидаемого результата</div>
+<blockquote id="fdTaskQuote">«Посмотри, что у нас с дебиторкой, и подготовь информацию к пятнице».</blockquote>
+<div class="result"><strong id="fdTaskResultTitle">Что вы рискуете получить</strong><span id="fdTaskResult">Выгрузку задолженности: суммы, даты, перечень клиентов. Но не предложения о том, с какими должниками и что делать.</span></div>
+<div class="takeaway" id="fdTaskTakeaway">Сотрудник выполнил просьбу собрать информацию, но решение по-прежнему придется готовить вам.</div>
+</div>
+<div class="bottom"><span class="step" id="fdTaskStep">Вариант 1 из 2</span><button type="button" class="next" id="fdTaskNext">Улучшить поручение →</button></div>
+</section>
+<script>
+(function(){
+  var root=document.getElementById('fdTaskDemo'); if(!root)return;
+  var panel=root.querySelector('#fdTaskPanel');
+  var parts={label:root.querySelector('#fdTaskLabel'),quote:root.querySelector('#fdTaskQuote'),resultTitle:root.querySelector('#fdTaskResultTitle'),result:root.querySelector('#fdTaskResult'),takeaway:root.querySelector('#fdTaskTakeaway'),step:root.querySelector('#fdTaskStep'),next:root.querySelector('#fdTaskNext')};
+  var states={bad:{label:'Поручение без ожидаемого результата',quote:'«Посмотри, что у нас с дебиторкой, и подготовь информацию к пятнице».',resultTitle:'Что вы рискуете получить',result:'Выгрузку задолженности: суммы, даты, перечень клиентов. Но не предложения о том, с какими должниками и что делать.',takeaway:'Сотрудник выполнил просьбу собрать информацию, но решение по-прежнему придется готовить вам.',step:'Вариант 1 из 2',next:'Улучшить поручение →'},good:{label:'Поручение с ясной целью',quote:'«К пятнице выдели десять крупнейших проблемных должников, оцени причины просрочки и предложи меры по каждому. Мне нужно определить, где требуется мое вмешательство».',resultTitle:'Что вы получите',result:'Список десяти проблемных должников, причины просрочки и предложения по каждому. Видно, где требуется ваше вмешательство.',takeaway:'Сотрудник готовит не просто данные, а основу для вашего решения.',step:'Вариант 2 из 2',next:'Сравнить еще раз ↺'}};
+  function show(which){var s=states[which];panel.className='panel '+which;Object.keys(parts).forEach(function(k){parts[k].textContent=s[k]});root.querySelectorAll('[data-variant]').forEach(function(b){var a=b.getAttribute('data-variant')===which;b.classList.toggle('active',a);b.setAttribute('aria-pressed',String(a))});root.dataset.current=which;}
+  root.querySelectorAll('[data-variant]').forEach(function(b){b.addEventListener('click',function(){show(b.getAttribute('data-variant'))})});parts.next.addEventListener('click',function(){show(root.dataset.current==='good'?'bad':'good')});show('bad');
+})();
+</script>
+</body>
+</html>
