@@ -1,27 +1,489 @@
+
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Поручение или результат? — интерактив</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Выберите правильное поручение</title>
 <style>
-:root{font-family:Arial,Helvetica,sans-serif;color:#19304b;--blue:#174f90;--light:#f2f7fd;--line:#dce7f2;--green:#186d50;--red:#a34738}*{box-sizing:border-box}body{margin:0;background:#fff;padding:20px}.widget{max-width:930px;margin:auto;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 6px 26px rgba(25,61,100,.07)}header{padding:25px 26px 20px;background:linear-gradient(110deg,#eaf4ff,#f8fbff)}h2{font-size:24px;line-height:1.2;margin:0 0 9px}header p{font-size:15px;line-height:1.5;margin:0;max-width:680px}.controls{display:flex;gap:9px;flex-wrap:wrap;margin-top:19px}.scenario{border:1px solid #b9d2ec;background:white;padding:10px 14px;border-radius:10px;font-weight:700;font-size:13px;cursor:pointer;color:#315373}.scenario[aria-selected=true]{background:var(--blue);border-color:var(--blue);color:white}.scenario:focus-visible,button:focus-visible{outline:3px solid #e8a235;outline-offset:2px}.main{padding:22px 25px 24px}.task{font-size:13px;letter-spacing:.07em;text-transform:uppercase;color:#667f98;font-weight:800;margin-bottom:5px}.heading{font-size:20px;line-height:1.35;font-weight:800;margin:0 0 17px}.table{display:grid;grid-template-columns:1fr 1fr;gap:13px}.cell{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#fff;transition:transform .2s}.cell-head{padding:13px 16px;font-size:15px;font-weight:bold;display:flex;align-items:center;gap:8px}.bad .cell-head{background:#fff0ed;color:var(--red)}.good .cell-head{background:#eaf8f1;color:var(--green)}.quote{padding:18px 16px;min-height:135px;font-size:16px;line-height:1.52;font-weight:600}.result{margin:0 13px 13px;border-top:1px solid var(--line);padding:13px 3px 3px;font-size:14px;line-height:1.5}.result b{display:block;margin-bottom:5px;color:#465b75}.toggle{display:inline-flex;gap:6px;align-items:center;border:1px solid #a8c6e5;background:#f0f7ff;color:var(--blue);font-weight:700;padding:10px 13px;border-radius:9px;cursor:pointer;font-size:13px;margin-top:16px}.lesson{display:none;margin-top:14px;padding:14px 17px;background:var(--light);border-left:4px solid var(--blue);border-radius:9px;line-height:1.5;font-size:14px}.lesson.open{display:block}.foot{padding:0 25px 22px;display:flex;justify-content:space-between;align-items:center;gap:12px}.count{font-size:13px;color:#667f98}.next{border:0;background:var(--blue);color:white;border-radius:9px;padding:11px 17px;font-weight:700;cursor:pointer}.next:hover,.scenario[aria-selected=true]:hover{background:#103e72}@media(max-width:640px){body{padding:9px}.widget{border-radius:12px}header{padding:19px 16px}h2{font-size:21px}.main{padding:18px 14px}.heading{font-size:18px}.table{grid-template-columns:1fr}.quote{min-height:0}.foot{padding:0 14px 18px}.controls{gap:6px}.scenario{font-size:12px;padding:9px}}
+#fd-task-quiz {
+  --blue:#174f90;
+  --light:#f2f7fd;
+  --line:#dce7f2;
+  --green:#186d50;
+  --red:#a34738;
+  font-family:Arial,Helvetica,sans-serif;
+  color:#19304b;
+  max-width:930px;
+  margin:0 auto;
+}
+#fd-task-quiz * {box-sizing:border-box}
+#fd-task-quiz .widget {
+  border:1px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
+  background:#fff;
+}
+#fd-task-quiz .top {
+  background:#f2f7fd;
+  padding:24px;
+}
+#fd-task-quiz h2 {
+  font-size:23px;
+  line-height:1.3;
+  margin:0 0 10px;
+}
+#fd-task-quiz .intro {
+  font-size:15px;
+  line-height:1.6;
+  margin:0;
+}
+#fd-task-quiz .progress {
+  display:flex;
+  gap:7px;
+  margin-top:20px;
+}
+#fd-task-quiz .progress span {
+  height:5px;
+  flex:1;
+  background:#d8e5f4;
+  border-radius:10px;
+}
+#fd-task-quiz .progress span.active {
+  background:var(--blue);
+}
+#fd-task-quiz .body {
+  padding:24px;
+}
+#fd-task-quiz .counter {
+  color:#68809b;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  margin-bottom:9px;
+}
+#fd-task-quiz h3 {
+  font-size:20px;
+  line-height:1.4;
+  margin:0 0 12px;
+}
+#fd-task-quiz .instruction {
+  font-size:14px;
+  color:#536981;
+  margin:0 0 18px;
+}
+#fd-task-quiz .choices {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:13px;
+}
+#fd-task-quiz .choice {
+  font:inherit;
+  text-align:left;
+  border:1.5px solid var(--line);
+  border-radius:12px;
+  background:#fff;
+  padding:18px;
+  color:#19304b;
+  cursor:pointer;
+  min-height:148px;
+  transition:border-color .2s,background .2s;
+}
+#fd-task-quiz .choice:hover:not(:disabled) {
+  border-color:#4388c9;
+  background:#f6faff;
+}
+#fd-task-quiz .choice:focus-visible,
+#fd-task-quiz button:focus-visible {
+  outline:3px solid #e8a235;
+  outline-offset:2px;
+}
+#fd-task-quiz .choice:disabled {
+  cursor:default;
+  opacity:1;
+}
+#fd-task-quiz .choice.correct {
+  background:#effaf4;
+  border-color:#65ae87;
+}
+#fd-task-quiz .choice.wrong {
+  background:#fff3f0;
+  border-color:#d39a8d;
+}
+#fd-task-quiz .choice-label {
+  display:block;
+  font-size:12px;
+  font-weight:700;
+  color:#6b8199;
+  margin-bottom:12px;
+}
+#fd-task-quiz .choice-text {
+  display:block;
+  font-size:15px;
+  line-height:1.6;
+}
+#fd-task-quiz .feedback {
+  display:none;
+  margin-top:20px;
+  padding:18px 19px;
+  border-radius:12px;
+  background:#f2f7fd;
+  border-left:4px solid var(--blue);
+}
+#fd-task-quiz .feedback.show {display:block}
+#fd-task-quiz .feedback.correct {
+  border-left-color:var(--green);
+}
+#fd-task-quiz .feedback.wrong {
+  border-left-color:var(--red);
+}
+#fd-task-quiz .feedback-title {
+  font-size:16px;
+  font-weight:700;
+  margin-bottom:9px;
+}
+#fd-task-quiz .feedback p {
+  font-size:14px;
+  line-height:1.65;
+  margin:0 0 10px;
+}
+#fd-task-quiz .feedback p:last-child {margin-bottom:0}
+#fd-task-quiz .benefit {
+  padding-top:11px;
+  border-top:1px solid #d6e3f1;
+  margin-top:12px;
+}
+#fd-task-quiz .footer {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:20px;
+}
+#fd-task-quiz .score {
+  font-size:13px;
+  color:#68809b;
+}
+#fd-task-quiz .next {
+  border:0;
+  background:var(--blue);
+  color:#fff;
+  padding:12px 20px;
+  border-radius:9px;
+  font-weight:700;
+  font-size:14px;
+  cursor:pointer;
+}
+#fd-task-quiz .next:disabled {
+  background:#e7ebf1;
+  color:#99a8ba;
+  cursor:not-allowed;
+}
+#fd-task-quiz .next:not(:disabled):hover {
+  background:#103e72;
+}
+#fd-task-quiz .finish {
+  text-align:center;
+  padding:32px 10px;
+}
+#fd-task-quiz .finish .big-score {
+  font-size:40px;
+  font-weight:800;
+  color:var(--blue);
+  margin:14px 0;
+}
+#fd-task-quiz .finish p {
+  font-size:15px;
+  line-height:1.6;
+  max-width:490px;
+  margin:0 auto 20px;
+}
+@media(max-width:640px) {
+  #fd-task-quiz .top,
+  #fd-task-quiz .body {padding:17px}
+  #fd-task-quiz h2 {font-size:21px}
+  #fd-task-quiz h3 {font-size:18px}
+  #fd-task-quiz .choices {grid-template-columns:1fr}
+  #fd-task-quiz .choice {min-height:auto}
+  #fd-task-quiz .footer {flex-wrap:wrap}
+}
 </style>
 </head>
 <body>
-<section class="widget" aria-label="Сравнение поручений">
-<header><h2>Поручение или результат?</h2><p>Пять рабочих ситуаций финансового директора. Сравните, что услышит сотрудник и какой результат вы получите. Откройте объяснение для каждого примера</p><nav class="controls" id="tabs" aria-label="Выбор ситуации"></nav></header>
-<div class="main"><div class="task" id="topic"></div><h3 class="heading" id="title"></h3>
-<div class="table"><section class="cell bad"><div class="cell-head">✕ Неудачное поручение</div><div class="quote" id="bad"></div><div class="result"><b>Что вы рискуете получить</b><span id="badResult"></span></div></section><section class="cell good"><div class="cell-head">✓ Хорошее поручение</div><div class="quote" id="good"></div><div class="result"><b>Что вы получите</b><span id="goodResult"></span></div></section></div>
-<button class="toggle" id="reveal" aria-expanded="false" aria-controls="lesson">Почему второй вариант лучше? ↓</button><div class="lesson" id="lesson"></div></div>
-<div class="foot"><span class="count" id="count"></span><button class="next" id="next">Следующая ситуация →</button></div></section>
-<script>
-const cases=[
-{tag:'Дебиторская задолженность',title:'Кого из должников взять под личный контроль?',bad:'«Посмотри, что у нас с дебиторкой, и подготовь информацию к пятнице».',good:'«К пятнице выдели десять крупнейших проблемных должников, оцени причины просрочки и предложи меры по каждому. Мне нужно определить, где требуется мое вмешательство».',badResult:'Общую выгрузку задолженности. Решать, на кого обратить внимание, придется самостоятельно.',goodResult:'Приоритетный список должников с причинами просрочки и предложенными действиями по каждому.',lesson:'Названо управленческое решение, ради которого нужен анализ: где CFO должен вмешаться. Сотрудник понимает, что выгрузки недостаточно.'},
-{tag:'План-факт',title:'Почему выросли расходы?',bad:'«Подготовь анализ отклонений затрат от бюджета за квартал».',good:'«К среде выдели три основных причины превышения бюджета, оцени вклад каждой в рублях и отдели разовые отклонения от тех, что повлияют на прогноз до конца года».',badResult:'Таблицу отклонений по статьям без объяснения причин и последствий.',goodResult:'Разбор существенных причин и оценку того, какие из них требуют пересмотра прогноза.',lesson:'Поручение ориентировано на объяснение отклонений и их последствия, а не на пересчет уже известных цифр.'},
-{tag:'Ликвидность',title:'Где возникнет дефицит денег?',bad:'«Обнови платежный календарь и пришли актуальный файл».',good:'«Сегодня до 16:00 обнови платежный календарь на две недели, выдели дни с отрицательным остатком, укажи величину дефицита и предложи варианты переноса некритичных платежей».',badResult:'Свежую таблицу платежей, где возможный кассовый разрыв придется искать самому.',goodResult:'Даты и суммы потенциальных разрывов с вариантами действий для обсуждения.',lesson:'Обозначено не только обновление данных, но и решение, которое они должны поддержать: как избежать дефицита ликвидности.'}
 
+<div id="fd-task-quiz">
+<section class="widget">
+
+<div class="top">
+  <h2>Поручение или результат?</h2>
+  <p class="intro">
+    Перед вами три рабочие ситуации финансового директора.
+    В каждой выберите поручение, которое поможет сотруднику
+    правильно понять задачу и подготовить нужный результат.
+  </p>
+  <div class="progress" id="fdProgress"></div>
+</div>
+
+<div class="body" id="fdBody">
+
+  <div class="counter" id="fdCounter"></div>
+  <h3 id="fdTitle"></h3>
+  <p class="instruction">
+    Какое поручение вы дадите сотруднику?
+  </p>
+
+  <div class="choices" id="fdChoices"></div>
+
+  <div class="feedback" id="fdFeedback"
+       aria-live="polite"></div>
+
+  <div class="footer">
+    <span class="score" id="fdScore"></span>
+    <button class="next" id="fdNext"
+            type="button" disabled>
+      Следующая ситуация →
+    </button>
+  </div>
+
+</div>
+</section>
+</div>
+
+<script>
+(function(){
+
+const cases = [
+  {
+    title:"Кого из должников взять под личный контроль?",
+    options:[
+      "«Посмотри, что у нас с дебиторкой, и подготовь информацию к пятнице».",
+      "«К пятнице выдели десять крупнейших проблемных должников, оцени причины просрочки и предложи меры по каждому. Мне нужно определить, где требуется мое вмешательство»."
+    ],
+    correct:1,
+    explanation:
+      "В первом поручении неясно, что именно требуется: " +
+      "сотрудник может ограничиться общей выгрузкой задолженности. " +
+      "Во втором указаны ожидаемый результат, срок и цель анализа. " +
+      "Сотрудник понимает, что нужно не просто собрать цифры, " +
+      "а подготовить предложения для решения.",
+    benefit:
+      "Вы получите приоритетный список должников с причинами " +
+      "просрочки и предложенными действиями по каждому. " +
+      "Это поможет определить, где требуется ваше вмешательство."
+  },
+  {
+    title:"Почему выросли расходы?",
+    options:[
+      "«К среде выдели три основные причины превышения бюджета, оцени вклад каждой в рублях и отдели разовые отклонения от тех, что повлияют на прогноз до конца года».",
+      "«Подготовь к среде анализ отклонений затрат от бюджета за квартал. Покажи динамику и расшифровку по статьям»."
+    ],
+    correct:0,
+    explanation:
+      "Оба поручения содержат конкретный срок и предполагают " +
+      "анализ. Но во втором случае сотрудник может ограничиться " +
+      "таблицей отклонений. Первое поручение требует объяснить " +
+      "причины перерасхода и определить последствия для прогноза.",
+    benefit:
+      "Вы получите оценку основных причин превышения бюджета " +
+      "и поймете, какие отклонения потребуют пересмотра " +
+      "финансового прогноза."
+  },
+  {
+    title:"Где возникнет дефицит денег?",
+    options:[
+      "«Сегодня до 16:00 обнови платежный календарь на две недели и выдели все дни, в которые запланированные выплаты превышают поступления».",
+      "«Сегодня до 16:00 обнови платежный календарь на две недели, выдели дни с отрицательным остатком, укажи величину дефицита и предложи варианты переноса некритичных платежей»."
+    ],
+    correct:1,
+    explanation:
+      "Первый вариант выглядит конкретным, но сравнение " +
+      "поступлений и выплат за отдельный день не позволяет " +
+      "само по себе определить кассовый разрыв: нужно учитывать " +
+      "начальный остаток денег. Кроме того, такое поручение " +
+      "не предусматривает вариантов действий. Во втором " +
+      "сотрудник должен оценить остатки и предложить меры.",
+    benefit:
+      "Вы получите даты и суммы возможных кассовых разрывов, " +
+      "а также варианты действий для предотвращения дефицита."
+  }
 ];
-let current=0,opened=false;const el=id=>document.getElementById(id),tabs=el('tabs');function render(){const d=cases[current];tabs.innerHTML='';cases.forEach((c,i)=>{const b=document.createElement('button');b.className='scenario';b.type='button';b.textContent=`${i+1}. ${c.tag}`;b.setAttribute('aria-selected',String(i===current));b.onclick=()=>{current=i;opened=false;render()};tabs.append(b)});for(const key of ['bad','good','badResult','goodResult','lesson'])el(key).textContent=d[key];el('topic').textContent=d.tag;el('title').textContent=d.title;el('count').textContent=`Ситуация ${current+1} из ${cases.length}`;el('lesson').classList.toggle('open',opened);el('reveal').setAttribute('aria-expanded',String(opened));el('reveal').textContent=opened?'Скрыть объяснение ↑':'Почему второй вариант лучше? ↓';el('next').textContent=current===cases.length-1?'К первой ситуации ↻':'Следующая ситуация →'}el('reveal').onclick=()=>{opened=!opened;render()};el('next').onclick=()=>{current=(current+1)%cases.length;opened=false;render()};render();
+
+let current=0;
+let answers=[];
+
+const root=document.getElementById("fd-task-quiz");
+const get=id=>root.querySelector("#"+id);
+
+function renderProgress(){
+  const p=get("fdProgress");
+  p.innerHTML="";
+  cases.forEach((_,i)=>{
+    const s=document.createElement("span");
+    if(i<=current)s.className="active";
+    p.appendChild(s);
+  });
+}
+
+function render(){
+  const d=cases[current];
+
+  renderProgress();
+  get("fdCounter").textContent=
+    "Ситуация "+(current+1)+" из "+cases.length;
+  get("fdTitle").textContent=d.title;
+  get("fdScore").textContent=
+    "Верных ответов: "+
+    answers.filter((a,i)=>a===cases[i].correct).length;
+
+  const choices=get("fdChoices");
+  choices.innerHTML="";
+
+  d.options.forEach((option,i)=>{
+    const btn=document.createElement("button");
+    btn.type="button";
+    btn.className="choice";
+
+    const label=document.createElement("span");
+    label.className="choice-label";
+    label.textContent="Вариант "+(i===0?"А":"Б");
+
+    const text=document.createElement("span");
+    text.className="choice-text";
+    text.textContent=option;
+
+    btn.append(label,text);
+
+    if(answers[current]!==undefined){
+      btn.disabled=true;
+      if(i===d.correct)btn.classList.add("correct");
+      if(i===answers[current] && i!==d.correct){
+        btn.classList.add("wrong");
+      }
+    }else{
+      btn.addEventListener("click",()=>selectAnswer(i));
+    }
+
+    choices.appendChild(btn);
+  });
+
+  const fb=get("fdFeedback");
+  const next=get("fdNext");
+
+  if(answers[current]===undefined){
+    fb.className="feedback";
+    fb.innerHTML="";
+    next.disabled=true;
+  }else{
+    const correct=answers[current]===d.correct;
+
+    fb.className="feedback show "+
+      (correct?"correct":"wrong");
+
+    fb.innerHTML="";
+
+    const title=document.createElement("div");
+    title.className="feedback-title";
+    title.textContent=correct
+      ?"Верно! Это поручение поможет получить нужный результат."
+      :"Не совсем. Здесь есть важный нюанс.";
+
+    const explanation=document.createElement("p");
+    explanation.textContent=d.explanation;
+
+    const benefit=document.createElement("p");
+    benefit.className="benefit";
+
+    const bold=document.createElement("strong");
+    bold.textContent="Что получит финансовый директор: ";
+
+    benefit.append(bold,
+      document.createTextNode(d.benefit));
+
+    fb.append(title,explanation,benefit);
+    next.disabled=false;
+  }
+
+  next.textContent=current===cases.length-1
+    ?"Посмотреть результат →"
+    :"Следующая ситуация →";
+}
+
+function selectAnswer(i){
+  if(answers[current]!==undefined)return;
+  answers[current]=i;
+  render();
+}
+
+function showFinish(){
+  const total=answers.filter(
+    (a,i)=>a===cases[i].correct
+  ).length;
+
+  root.querySelector(".top").querySelector(
+    ".progress").style.display="none";
+
+  const body=get("fdBody");
+  body.innerHTML="";
+
+  const finish=document.createElement("div");
+  finish.className="finish";
+
+  const heading=document.createElement("h3");
+  heading.textContent="Проверка завершена";
+
+  const number=document.createElement("div");
+  number.className="big-score";
+  number.textContent=total+" из "+cases.length;
+
+  const message=document.createElement("p");
+
+  if(total===3){
+    message.textContent=
+      "Отличный результат! Вы умеете формулировать " +
+      "поручения так, чтобы сотрудник понимал, " +
+      "какой результат нужен руководителю.";
+  }else if(total===2){
+    message.textContent=
+      "Хороший результат. Обратите внимание: " +
+      "даже конкретное по срокам поручение может " +
+      "не содержать главного — цели и ожидаемого вывода.";
+  }else{
+    message.textContent=
+      "Попробуйте еще раз. Перед постановкой задачи " +
+      "определите, какое решение вы хотите принять " +
+      "по результатам работы сотрудника.";
+  }
+
+  const restart=document.createElement("button");
+  restart.className="next";
+  restart.type="button";
+  restart.textContent="Пройти еще раз";
+  restart.addEventListener("click",()=>{
+    current=0;
+    answers=[];
+    location.reload();
+  });
+
+  finish.append(heading,number,message,restart);
+  body.appendChild(finish);
+}
+
+get("fdNext").addEventListener("click",()=>{
+  if(answers[current]===undefined)return;
+
+  if(current===cases.length-1){
+    showFinish();
+  }else{
+    current++;
+    render();
+  }
+});
+
+render();
+
+})();
 </script>
+
 </body>
 </html>
